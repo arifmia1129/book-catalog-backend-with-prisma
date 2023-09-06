@@ -8,7 +8,7 @@ type IOrderedBooks = Order & {
   orderedBooks: IBook[];
 };
 
-type UserInfo = {
+export type UserInfo = {
   userId: string;
   role: string;
 };
@@ -65,16 +65,43 @@ export const createOrderService = async (
     },
   });
 };
-export const getOrderService = async (userInfo): Promise<Order[]> => {
-  return await prisma.order.findMany({
-    include: {
-      orderedBooks: {
-        include: {
-          book: true,
+export const getOrderService = async (
+  userInfo: UserInfo,
+): Promise<Order[] | null> => {
+  const { role, userId } = userInfo;
+
+  let res;
+
+  if (role === "admin") {
+    res = await prisma.order.findMany({
+      include: {
+        orderedBooks: {
+          include: {
+            book: true,
+          },
         },
       },
-    },
-  });
+    });
+  }
+
+  if (role === "customer") {
+    res = await prisma.order.findMany({
+      where: { userId },
+      include: {
+        orderedBooks: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+  }
+
+  if (!res) {
+    throw new ApiError("Order does not exist", httpStatus.NOT_FOUND);
+  }
+
+  return res;
 };
 
 export const getOrderByIdService = async (id: string): Promise<Order> => {

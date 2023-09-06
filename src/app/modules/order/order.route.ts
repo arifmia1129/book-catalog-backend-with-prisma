@@ -13,7 +13,11 @@ router.post(
   auth(USER_ROLE_ENUM.CUSTOMER),
   orderController.createOrder,
 );
-router.get("/", auth(USER_ROLE_ENUM.ADMIN), orderController.getOrder);
+router.get(
+  "/",
+  auth(USER_ROLE_ENUM.ADMIN, USER_ROLE_ENUM.CUSTOMER),
+  orderController.getOrder,
+);
 router
   .route("/:id")
   .get(orderController.getOrderById)

@@ -16,7 +16,8 @@ export const createOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 export const getOrder = catchAsync(async (req: Request, res: Response) => {
-  const result = await OrderService.getOrderService();
+  const userInfo = req.user as OrderService.UserInfo;
+  const result = await OrderService.getOrderService(userInfo);
 
   sendResponse<Order[]>(res, {
     statusCode: httpStatus.OK,
