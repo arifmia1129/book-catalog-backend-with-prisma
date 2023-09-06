@@ -14,6 +14,9 @@ router.post(
   bookController.createBook,
 );
 router.get("/", bookController.getBook);
+
+router.get("/:id/category", bookController.getBookByCategoryId);
+
 router
   .route("/:id")
   .get(bookController.getBookById)

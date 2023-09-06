@@ -47,6 +47,18 @@ export const getBookById = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+export const getBookByCategoryId = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await bookService.getBookByCategoryIdService(req.params.id);
+
+    sendResponse<Book[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Successfully retrieved Book by category id",
+      data: result,
+    });
+  },
+);
 
 export const updateBookById = catchAsync(
   async (req: Request, res: Response) => {

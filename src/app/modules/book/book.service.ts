@@ -125,6 +125,27 @@ export const getBookByIdService = async (id: string): Promise<Book> => {
 
   return res;
 };
+export const getBookByCategoryIdService = async (
+  id: string,
+): Promise<Book[]> => {
+  const res = await prisma.book.findMany({
+    where: {
+      categoryId: id,
+    },
+    include: {
+      category: true,
+    },
+  });
+
+  if (!res) {
+    throw new ApiError(
+      "Failed to retrived Book by given category id",
+      httpStatus.NOT_FOUND,
+    );
+  }
+
+  return res;
+};
 
 export const updateBookByIdService = async (
   id: string,
