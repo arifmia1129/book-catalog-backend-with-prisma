@@ -75,3 +75,30 @@ export const updateUserByIdService = async (
 
   return res;
 };
+export const deleteUserByIdService = async (
+  id: string,
+): Promise<Omit<User, "password">> => {
+  const res = await prisma.user.delete({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+
+  if (!res) {
+    throw new ApiError(
+      "Failed to delete user by given id",
+      httpStatus.NOT_FOUND,
+    );
+  }
+
+  return res;
+};

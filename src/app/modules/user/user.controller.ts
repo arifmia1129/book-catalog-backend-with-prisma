@@ -42,3 +42,15 @@ export const updateUserById = catchAsync(
     });
   },
 );
+export const deleteUserById = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await userService.deleteUserByIdService(req.params.id);
+
+    sendResponse<Omit<User, "password">>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Successfully deleted user by id",
+      data: result,
+    });
+  },
+);

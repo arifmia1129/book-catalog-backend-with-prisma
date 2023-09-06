@@ -10,7 +10,8 @@ router
   .route("/:id")
   .all(auth(USER_ROLE_ENUM.ADMIN))
   .get(userController.getUserById)
-  .patch(userController.updateUserById);
+  .patch(userController.updateUserById)
+  .delete(userController.deleteUserById);
 
 const userRouter = router;
 
