@@ -13,8 +13,8 @@ router.post(
 router.get("/", categoryController.getCategory);
 router
   .route("/:id")
-  .all(auth(USER_ROLE_ENUM.ADMIN))
   .get(categoryController.getCategoryById)
+  .all(auth(USER_ROLE_ENUM.ADMIN))
   .patch(categoryController.updateCategoryById)
   .delete(categoryController.deleteCategoryById);
 
