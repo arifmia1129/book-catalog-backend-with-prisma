@@ -20,8 +20,8 @@ router.get(
 );
 router
   .route("/:id")
-  .get(orderController.getOrderById)
-  .all(auth(USER_ROLE_ENUM.ADMIN));
+  .all(auth(USER_ROLE_ENUM.ADMIN, USER_ROLE_ENUM.CUSTOMER))
+  .get(orderController.getOrderById);
 
 const orderRouter = router;
 

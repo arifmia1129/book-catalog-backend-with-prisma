@@ -104,7 +104,12 @@ export const getOrderService = async (
   return res;
 };
 
-export const getOrderByIdService = async (id: string): Promise<Order> => {
+export const getOrderByIdService = async (
+  id: string,
+  userInfo: UserInfo,
+): Promise<Order> => {
+  const { role, userId } = userInfo;
+
   const res = await prisma.order.findUnique({
     where: {
       id,
@@ -122,6 +127,13 @@ export const getOrderByIdService = async (id: string): Promise<Order> => {
     throw new ApiError(
       "Failed to retrived Order by given id",
       httpStatus.NOT_FOUND,
+    );
+  }
+
+  if (role === "customer" && res.userId !== userId) {
+    throw new ApiError(
+      "You are not authorized user to access this order. Try to retrieve your own order details",
+      httpStatus.FORBIDDEN,
     );
   }
 
