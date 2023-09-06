@@ -1,22 +1,80 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Order, Prisma } from "@prisma/client";
+import { Order } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 import ApiError from "../../../errors/ApiError";
 import httpStatus from "../../../shared/httpStatus";
 
-export const createOrderService = async (data: Order): Promise<Order> => {
-  const { orderedBooks } = data;
+type IOrderedBooks = Order & {
+  orderedBooks: IBook[];
+};
 
-  const jsonOrderedBooks = orderedBooks as Prisma.JsonArray;
+type UserInfo = {
+  userId: string;
+  role: string;
+};
 
-  data.orderedBooks = jsonOrderedBooks;
+type IBook = {
+  bookId: string;
+  quantity: number;
+};
 
-  return await prisma.order.create({
-    data,
+export const createOrderService = async (
+  data: IOrderedBooks,
+): Promise<Order | null> => {
+  const newOrder = await prisma.$transaction(async tx => {
+    const { orderedBooks, ...other } = data;
+
+    const res = await tx.order.create({
+      data: other,
+    });
+
+    if (!res) {
+      throw new ApiError("Failed to create order", httpStatus.BAD_REQUEST);
+    }
+
+    for (const book of orderedBooks) {
+      const insertBookInfo = await tx.orderedBook.create({
+        data: {
+          orderId: res.id,
+          bookId: book.bookId,
+          quantity: book.quantity,
+        },
+      });
+
+      if (!insertBookInfo) {
+        throw new ApiError("Failed to take this order", httpStatus.BAD_REQUEST);
+      }
+    }
+
+    return res;
+  });
+
+  if (!newOrder) {
+    throw new ApiError("Order couldn't created", httpStatus.BAD_REQUEST);
+  }
+  return await prisma.order.findUnique({
+    where: {
+      id: newOrder.id,
+    },
+    include: {
+      orderedBooks: {
+        include: {
+          book: true,
+        },
+      },
+    },
   });
 };
-export const getOrderService = async (): Promise<Order[]> => {
-  return await prisma.order.findMany();
+export const getOrderService = async (userInfo): Promise<Order[]> => {
+  return await prisma.order.findMany({
+    include: {
+      orderedBooks: {
+        include: {
+          book: true,
+        },
+      },
+    },
+  });
 };
 
 export const getOrderByIdService = async (id: string): Promise<Order> => {
@@ -25,7 +83,11 @@ export const getOrderByIdService = async (id: string): Promise<Order> => {
       id,
     },
     include: {
-      user: true,
+      orderedBooks: {
+        include: {
+          book: true,
+        },
+      },
     },
   });
 

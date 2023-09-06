@@ -13,7 +13,6 @@ export const createOrderValidation = z.object({
         quantity: z.number(),
       }),
     ),
-    status: OrderStatusEnum,
   }),
 });
 export const updateOrderValidation = z.object({
