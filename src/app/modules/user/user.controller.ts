@@ -15,3 +15,14 @@ export const getUser = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const getUserById = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getUserByIdService(req.params.id);
+
+  sendResponse<Omit<User, "password">>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Successfully retrieved user by id",
+    data: result,
+  });
+});

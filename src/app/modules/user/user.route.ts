@@ -6,6 +6,10 @@ import { USER_ROLE_ENUM } from "../../../enums/user.enum";
 const router = Router();
 
 router.get("/", auth(USER_ROLE_ENUM.ADMIN), userController.getUser);
+router
+  .route("/:id")
+  .all(auth(USER_ROLE_ENUM.ADMIN))
+  .get(userController.getUser);
 
 const userRouter = router;
 
