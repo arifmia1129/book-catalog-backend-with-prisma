@@ -9,7 +9,9 @@ import bcrypt from "bcryptjs";
 import { User } from "@prisma/client";
 import prisma from "../../../shared/prisma";
 
-export const signupUserAuthService = async (payload: User): Promise<User> => {
+export const signupUserAuthService = async (
+  payload: User,
+): Promise<Omit<User, "password">> => {
   const hashedPassword = await bcrypt.hash(
     payload.password,
     Number(config.bcrypt_salt_rounds),
@@ -19,6 +21,15 @@ export const signupUserAuthService = async (payload: User): Promise<User> => {
 
   return await prisma.user.create({
     data: payload,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
   });
 };
 export const signinUserAuthService = async (

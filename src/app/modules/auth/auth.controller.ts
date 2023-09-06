@@ -11,7 +11,7 @@ export const signupUserAuth = catchAsync(
   async (req: Request, res: Response) => {
     const result = await userAuthService.signupUserAuthService(req.body);
 
-    sendResponse<User>(res, {
+    sendResponse<Omit<User, "password">>(res, {
       statusCode: httpStatus.OK,
       success: true,
       message: "Successfully create a new user",
