@@ -60,16 +60,16 @@ export const signinUserAuthService = async (
     throw new ApiError("Invalid ID or Password", httpStatus.FORBIDDEN);
   }
 
-  const { email: userEmail, role } = isUserExist;
+  const { id: userId, role } = isUserExist;
 
   const accessToken = jwtHelper.createToken(
-    { userEmail, role },
+    { userId, role },
     config.jwt.secret as Secret,
     config.jwt.secret_expires_in as string,
   );
 
   const refreshToken = jwtHelper.createToken(
-    { userEmail, role },
+    { userId, role },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_secret_expires_in as string,
   );
