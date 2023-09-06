@@ -1,5 +1,5 @@
 {
-  "name": "university-management-auth-service",
+  "name": "book-catalog-backend-with-prisma",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
