@@ -1,13 +1,13 @@
 type Option = {
   page?: number | string;
-  limit?: number | string;
+  size?: number | string;
   sortBy?: string;
   sortOrder?: string;
 };
 
 type CalculatePagination = {
   page: number;
-  limit: number;
+  size: number;
   skip: number;
   sortBy?: string;
   sortOrder?: string;
@@ -15,15 +15,15 @@ type CalculatePagination = {
 
 const calculatePagination = (option: Option): CalculatePagination => {
   const page = Number(option.page || 1);
-  const limit = Number(option.limit || 10);
-  const skip = (page - 1) * limit;
+  const size = Number(option.size || 10);
+  const skip = (page - 1) * size;
 
-  const sortBy = option.sortBy || "createdAt";
+  const sortBy = option.sortBy || "title";
   const sortOrder = option.sortOrder || "desc";
 
   return {
     page,
-    limit,
+    size,
     skip,
     sortBy,
     sortOrder,

@@ -20,6 +20,9 @@ export const getCategoryByIdService = async (id: string): Promise<Category> => {
     where: {
       id,
     },
+    include: {
+      books: true,
+    },
   });
 
   if (!res) {

@@ -4,25 +4,36 @@ import sendResponse from "../../../shared/sendResponse";
 import * as bookService from "./book.service";
 import httpStatus from "../../../shared/httpStatus";
 import { Request, Response } from "express";
+import { bookFilterableField } from "./book.constant";
+import pick from "../../../shared/pick";
+import {
+  Filter,
+  Pagination,
+} from "../../../interfaces/databaseQuery.interface";
+import { paginationField } from "../../constant/pagination";
 
 export const createBook = catchAsync(async (req: Request, res: Response) => {
   const result = await bookService.createBookService(req.body);
 
   sendResponse<Book>(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
-    message: "Successfully retrieved Book",
+    message: "Successfully create Book",
     data: result,
   });
 });
 export const getBook = catchAsync(async (req: Request, res: Response) => {
-  const result = await bookService.getBookService();
+  const filters: Filter = pick(req.query, bookFilterableField);
+  const paginationOptions: Pagination = pick(req.query, paginationField);
+
+  const result = await bookService.getBookService(filters, paginationOptions);
 
   sendResponse<Book[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Successfully retrieved Book",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 

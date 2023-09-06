@@ -1,7 +1,7 @@
 import { ParsedQs } from "qs";
 export type Pagination = {
   page?: number;
-  limit?: number;
+  size?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
 };
@@ -9,7 +9,7 @@ export type Pagination = {
 export type ResponseWithPagination<T> = {
   meta: {
     page: number;
-    limit: number;
+    size: number;
     total: number;
   };
   data: T;

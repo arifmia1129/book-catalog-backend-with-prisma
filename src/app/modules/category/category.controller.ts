@@ -10,9 +10,9 @@ export const createCategory = catchAsync(
     const result = await CategoryService.createCategoryService(req.body);
 
     sendResponse<Category>(res, {
-      statusCode: httpStatus.OK,
+      statusCode: httpStatus.CREATED,
       success: true,
-      message: "Successfully retrieved Category",
+      message: "Successfully created Category",
       data: result,
     });
   },
