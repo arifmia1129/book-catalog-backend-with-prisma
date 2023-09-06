@@ -26,3 +26,19 @@ export const getUserById = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const updateUserById = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await userService.updateUserByIdService(
+      req.params.id,
+      req.body,
+    );
+
+    sendResponse<Omit<User, "password">>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Successfully updated user by id",
+      data: result,
+    });
+  },
+);

@@ -9,7 +9,8 @@ router.get("/", auth(USER_ROLE_ENUM.ADMIN), userController.getUser);
 router
   .route("/:id")
   .all(auth(USER_ROLE_ENUM.ADMIN))
-  .get(userController.getUser);
+  .get(userController.getUserById)
+  .patch(userController.updateUserById);
 
 const userRouter = router;
 

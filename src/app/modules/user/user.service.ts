@@ -45,3 +45,33 @@ export const getUserByIdService = async (
 
   return res;
 };
+
+export const updateUserByIdService = async (
+  id: string,
+  data: Partial<User>,
+): Promise<Omit<User, "password">> => {
+  const res = await prisma.user.update({
+    where: {
+      id,
+    },
+    data,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+
+  if (!res) {
+    throw new ApiError(
+      "Failed to update user by given id",
+      httpStatus.NOT_FOUND,
+    );
+  }
+
+  return res;
+};
