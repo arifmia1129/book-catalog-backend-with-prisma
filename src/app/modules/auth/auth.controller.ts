@@ -4,8 +4,8 @@ import * as userAuthService from "./auth.service";
 import httpStatus from "../../../shared/httpStatus";
 import sendResponse from "../../../shared/sendResponse";
 import config from "../../../config";
-import { LoginResponse } from "./auth.interface";
 import { User } from "@prisma/client";
+import signinResponse from "../../../shared/signinResponse";
 
 export const signupUserAuth = catchAsync(
   async (req: Request, res: Response) => {
@@ -33,11 +33,11 @@ export const signinUserAuth = catchAsync(
 
     res.cookie("refreshToken", refreshToken, cookieOption);
 
-    sendResponse<LoginResponse>(res, {
+    signinResponse<string>(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Successfully logged in user",
-      data: other,
+      message: "User signin successfully!",
+      token: other.accessToken,
     });
   },
 );

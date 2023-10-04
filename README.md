@@ -5,6 +5,7 @@
 ### User
 
 - api/v1/auth/signup (POST)
+- /api/v1/auth/signin (POST)
 - api/v1/users (GET)
 - api/v1/users/:id (Single GET) Include an id that is saved in your database
 - api/v1/users/:id (PATCH)
